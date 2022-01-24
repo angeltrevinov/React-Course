@@ -1,38 +1,47 @@
-import React from "react";
+import React, { useState } from 'react';
 
 import ExpenseItem from "./ExpenseItem/ExpenseItem";
-import Card from '../../UI/Card/Card';
+import Card from "../../UI/Card/Card";
+import ExpensesFilter from "./ExpenseFilter";
+import ExpensesChart from "./ExpensesChart";
 import './Expenses.css';
 
-const Expenses = props => {
+const Expenses = (props) => {
+    const [filteredYear, setFilteredYear] = useState('2020');
+
+    const filterChangeHandler = (selectedYear) => {
+        setFilteredYear(selectedYear);
+    };
+
+    const filteredExpenses = props.items.filter((expense) => {
+        return expense.date.getFullYear().toString() === filteredYear;
+    });
+
+    let expensesContent = <p>No expenses found.</p>;
+
+    if (filteredExpenses.length > 0) {
+        expensesContent = filteredExpenses.map((expense) => (
+            <ExpenseItem
+                key={expense.id}
+                title={expense.title}
+                amount={expense.amount}
+                date={expense.date}
+            />
+        ));
+    }
+
     return (
-        <Card className="expenses">
-            <ExpenseItem
-                id={props.items[0].id}
-                date={props.items[0].date}
-                title={props.items[0].title}
-                amount={props.items[0].amount}
-            />
-            <ExpenseItem
-                id={props.items[1].id}
-                date={props.items[1].date}
-                title={props.items[1].title}
-                amount={props.items[1].amount}
-            />
-            <ExpenseItem
-                id={props.items[2].id}
-                date={props.items[2].date}
-                title={props.items[2].title}
-                amount={props.items[2].amount}
-            />
-            <ExpenseItem
-                id={props.items[3].id}
-                date={props.items[3].date}
-                title={props.items[3].title}
-                amount={props.items[3].amount}
-            />
-        </Card>
+        <div>
+            <Card className='expenses'>
+                <ExpensesFilter
+                    selected={filteredYear}
+                    onChangeFilter={filterChangeHandler}
+                />
+                <ExpensesChart expenses={filteredExpenses}/>
+                {expensesContent}
+            </Card>
+        </div>
     );
-}
+};
 
 export default Expenses;

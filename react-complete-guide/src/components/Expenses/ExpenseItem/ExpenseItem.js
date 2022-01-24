@@ -6,7 +6,7 @@ import Card from "../../../UI/Card/Card";
 const ExpenseItem = props => {
     // a react hook that helps update the ui after variable changes
     // receives the default value
-    const {id, date, amount } = props;
+    const {date, amount} = props;
     const [title, setTitle] = useState(props.title);
 
     const changeName = () => {
